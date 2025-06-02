@@ -1,0 +1,57 @@
+import express, { Request, Response } from "express";
+import User from "../models/User";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+const router = express.Router();
+
+// Register Route
+router.post("/register", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      res.status(400).json({ message: "User already exists" });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered", user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Login Route
+router.post("/login", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.status(401).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(401).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    // Optional: create a token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ message: "Login successful", user, token });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+export default router;
