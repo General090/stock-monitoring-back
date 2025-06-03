@@ -1,9 +1,11 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
-const receiptSchema = new Schema({
-  productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+const receiptSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
   quantity: { type: Number, required: true },
-  total: { type: Number, required: true }
+  type: { type: String, enum: ["sale", "return"], required: true },
+  price: { type: Number, required: true }, 
 }, { timestamps: true });
 
-export default model("Receipt", receiptSchema);
+const Receipt = mongoose.model("Receipt", receiptSchema);
+export default Receipt;

@@ -3,6 +3,25 @@ import Product from "../models/Product";
 
 const router = express.Router();
 
+// GET /products/low-stock
+router.get("/low-stock", async (req, res) => {
+  try {
+    const threshold = 5;
+    const lowStock = await Product.find({ quantity: { $lt: threshold } });
+    res.json(lowStock);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch low stock products" });
+  }
+});
+
+// GET /api/products
+router.get("/", async (_req, res) => {
+  const products = await Product.find();
+  res.json(products);
+});
+
+
+
 // Get all products
 router.get("/", async (_req: Request, res: Response) => {
   try {
