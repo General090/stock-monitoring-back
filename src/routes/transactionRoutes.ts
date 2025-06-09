@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import Transaction from "../models/Transaction";
 import Product from "../models/Product";
 
-// Explicitly type the router
+
 const router: Router = Router();
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,7 +23,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
     return res.status(201).json(transaction);
   } catch (err) {
-    next(err); // Proper error handling
+    next(err);
   }
 });
 

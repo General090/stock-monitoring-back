@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
       productId,
       quantity,
       type,
-      price: product.price, // ✅ Save the price
+      price: product.price,
     });
 
     res.status(201).json({ receipt, product });
