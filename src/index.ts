@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: "https://stock-monitoring-back.onrender.com" }));
+app.use(cors({ origin: "https://stock-monitoring-front.onrender.com" }));
 app.use(express.json());
 
 app.use("/api/products", productRoutes);
