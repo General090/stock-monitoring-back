@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import Product from "../models/Product";
+import { checkStockLevel } from "../utils/checkStockLevel";
 
 const router = express.Router();
 
@@ -66,6 +67,25 @@ router.delete("/:id", async (req: Request, res: Response) => {
     res.json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ message: "Failed to delete product", error: err });
+  }
+});
+
+
+router.post("/stock-in", async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    product.quantity += quantity;
+    await product.save();
+
+    // ✅ Check stock level after update
+    await checkStockLevel(product._id.toString());
+
+    res.status(200).json({ message: "Stock updated", product });
+  } catch (err) {
+    res.status(500).json({ error: "Stock-in failed" });
   }
 });
 

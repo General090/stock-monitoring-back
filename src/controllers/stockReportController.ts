@@ -1,5 +1,15 @@
 import { Request, Response } from "express";
 import Product from "../models/Product";
+import { Transaction } from "../models/Transaction"; // adjust path
+
+
+interface TransactionTrend {
+  date: string;
+  totalTransactions: number;
+  totalQuantity: number;
+}
+
+
 
 export const getStockSummary = async (req: Request, res: Response) => {
   try {

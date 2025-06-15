@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import Transaction from "../models/Transaction";
+import { Transaction } from "../models/Transaction";
+
 import Product from "../models/Product";
 
 
